@@ -40,7 +40,8 @@ export default {
    */
   modules: [
     // Doc: https://buefy.github.io/#/documentation
-    'nuxt-buefy'
+    'nuxt-buefy',
+    ['vue-scrollto/nuxt', { duration: 300 }]
   ],
   /*
    ** Build configuration
