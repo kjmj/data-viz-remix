@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar fixed-top="true" shadow="true">
+    <b-navbar :fixed-top="true" :shadow="true">
       <template slot="brand">
         <b-navbar-item v-scroll-to="{ el: '#description', offset: -10 }">
           <img src="../assets/logo.png" alt="Remixing a data visualization" />
