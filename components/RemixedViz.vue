@@ -48,13 +48,40 @@ export default {
         2014,
         2015,
         2016
-      ]
+      ],
+      nyDataPromise: null,
+      topoDataPromise: null
     }
   },
   watch: {
     selectedYear: function(newYear, oldYear) {
       this.drawMap()
     }
+  },
+  created() {
+    let vm = this
+
+    // load in ny dataset
+    vm.nyDataPromise = new Promise(function(resolve, reject) {
+      d3.csv('ny_times_data.csv')
+        .then(function(data) {
+          resolve(data)
+        })
+        .catch(function(e) {
+          reject(Error(e))
+        })
+    })
+
+    // load in topo dataset
+    vm.topoDataPromise = new Promise(function(resolve, reject) {
+      d3.json('world.geojson')
+        .then(function(data) {
+          resolve(data)
+        })
+        .catch(function(e) {
+          reject(Error(e))
+        })
+    })
   },
   mounted() {
     this.drawMap()
@@ -64,7 +91,7 @@ export default {
     drawMap: function() {
       var width = 940
       var height = 600
-      let self = this
+      let vm = this
 
       // Add some dimensions to our svg
       var svg = d3
@@ -80,7 +107,7 @@ export default {
       var colorScale = d3.scaleQuantize([1, 10000], d3.schemePurples[5])
 
       // Load external data and boot
-      Promise.all([d3.json('world.geojson'), d3.csv('data.csv')]).then(
+      Promise.all([vm.topoDataPromise, vm.nyDataPromise]).then(
         ([topo, nytimes]) => {
           setData(nytimes)
           ready(topo)
@@ -91,7 +118,7 @@ export default {
       function setData(nytimes) {
         for (let i in nytimes) {
           const val = nytimes[i]
-          if (val.year == self.selectedYear) {
+          if (val.year == vm.selectedYear) {
             data.set(val.country, +val.numOccurrences)
           }
         }
@@ -99,8 +126,8 @@ export default {
 
       // Called when the mouse hovers over a country
       let mouseOver = function(d) {
-        self.country = d.properties.name
-        self.numTimes = d.total
+        vm.country = d.properties.name
+        vm.numTimes = d.total
       }
 
       // Once data is loaded, draw the map
@@ -122,6 +149,8 @@ export default {
       }
     },
     drawHeatMap: function() {
+      let vm = this
+
       // set the dimensions and margins of the graph
       var margin = { top: 30, right: 30, bottom: 30, left: 225 },
         width = 1000 - margin.left - margin.right,
@@ -179,7 +208,7 @@ export default {
       }
 
       //Read the data
-      Promise.all([d3.csv('data.csv')]).then(([data]) => {
+      vm.nyDataPromise.then(function(data) {
         // Sort data by country
         data.sort((a, b) =>
           a.country > b.country ? -1 : a.country < b.country ? 1 : 0
