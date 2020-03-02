@@ -11,12 +11,13 @@
         <OldViz></OldViz>
       </div>
     </section>
-
-    <section class="section" id="remixedViz">
-      <div class="container">
-        <RemixedViz></RemixedViz>
-      </div>
-    </section>
+    <no-ssr>
+      <section class="section" id="remixedViz">
+        <div class="container">
+          <RemixedViz></RemixedViz>
+        </div>
+      </section>
+    </no-ssr>
 
     <!--Placeholder so we can test scroll-to-->
     <div style="height: 3000px"></div>
