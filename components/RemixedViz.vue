@@ -14,6 +14,9 @@
       </b-select>
     </b-field>
     <svg></svg>
+    <body>
+      <div id="heatmap"></div>
+    </body>
   </div>
 </template>
 
@@ -55,16 +58,17 @@ export default {
   },
   mounted() {
     this.drawMap()
+    this.drawHeatMap()
   },
   methods: {
     drawMap: function() {
-      var width = 960
+      var width = 940
       var height = 600
       let self = this
 
       // Add some dimensions to our svg
       var svg = d3
-        .select('svg')
+        .select('svg') // TODO select a div instead of svg
         .attr('width', width)
         .attr('height', height)
 
@@ -88,7 +92,7 @@ export default {
         for (let i in nytimes) {
           const val = nytimes[i]
           if (val.year == self.selectedYear) {
-            data.set(val.country, +val['num occurrences'])
+            data.set(val.country, +val.numOccurrences)
           }
         }
       }
@@ -116,6 +120,130 @@ export default {
           })
           .on('mouseover', mouseOver)
       }
+    },
+    drawHeatMap: function() {
+      // set the dimensions and margins of the graph
+      var margin = { top: 30, right: 30, bottom: 30, left: 225 },
+        width = 1000 - margin.left - margin.right,
+        height = 3000 - margin.top - margin.bottom
+
+      // append the svg object to the body of the page
+      var svg = d3
+        .select('#heatmap')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+      var tooltip = d3
+        .select('body')
+        .append('div')
+        .style('position', 'absolute')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .style('background-color', 'white')
+        .style('border', 'solid')
+        .style('border-width', '2px')
+        .style('border-radius', '5px')
+        .style('padding', '5px')
+
+      // Three function that change the tooltip when user hover / move / leave a cell
+      var mouseover = function(d) {
+        tooltip.style('visibility', 'visible')
+
+        d3.select(this)
+          .style('stroke', 'black')
+          .style('opacity', 1)
+      }
+      var mousemove = function(d) {
+        tooltip
+          .html(
+            'Country: ' +
+              d.country +
+              '<br>' +
+              'Year: ' +
+              d.year +
+              '<br>' +
+              'Number of occurences: ' +
+              d.numOccurrences
+          )
+          .style('top', event.pageY - 10 + 'px')
+          .style('left', event.pageX + 10 + 'px')
+      }
+      var mouseout = function(d) {
+        tooltip.style('visibility', 'hidden')
+        d3.select(this)
+          .style('stroke', 'none')
+          .style('opacity', 0.8)
+      }
+
+      //Read the data
+      Promise.all([d3.csv('data.csv')]).then(([data]) => {
+        // Sort data by country
+        data.sort((a, b) =>
+          a.country > b.country ? -1 : a.country < b.country ? 1 : 0
+        )
+
+        // Labels of row and columns
+        var years = []
+        var countries = []
+        data.forEach(function(d) {
+          years.push(d.year)
+          countries.push(d.country)
+        })
+
+        // Remove duplicates
+        years = [...new Set(years)]
+        countries = [...new Set(countries)]
+
+        // Build X scales and axis:
+        var x = d3
+          .scaleBand()
+          .range([0, width])
+          .domain(years)
+          .padding(0.01)
+
+        svg
+          .append('g')
+          .attr('transform', 'translate(0,' + height + ')')
+          .call(d3.axisBottom(x))
+
+        // Build X scales and axis:
+        var y = d3
+          .scaleBand()
+          .range([height, 0])
+          .domain(countries)
+          .padding(0.01)
+
+        svg.append('g').call(d3.axisLeft(y))
+
+        // Build color scale
+        var colorScale = d3.scaleQuantize([1, 10000], d3.schemePurples[5])
+
+        // Create the colormap
+        svg
+          .selectAll()
+          .data(data, function(d) {
+            return d.year + ':' + d.country
+          })
+          .enter()
+          .append('rect')
+          .attr('x', function(d) {
+            return x(d.year)
+          })
+          .attr('y', function(d) {
+            return y(d.country)
+          })
+          .attr('width', x.bandwidth())
+          .attr('height', y.bandwidth())
+          .style('fill', function(d) {
+            return colorScale(d.numOccurrences)
+          })
+          .on('mouseover', mouseover)
+          .on('mousemove', mousemove)
+          .on('mouseout', mouseout)
+      })
     }
   },
   components: { Buefy }
