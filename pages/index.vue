@@ -18,9 +18,6 @@
         </div>
       </section>
     </no-ssr>
-
-    <!--Placeholder so we can test scroll-to-->
-    <div style="height: 3000px"></div>
   </div>
 </template>
 
