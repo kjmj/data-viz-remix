@@ -13,7 +13,7 @@
         </option>
       </b-select>
     </b-field>
-    <div id="map"></div>
+    <svg id="map"></svg>
     <body>
       <div id="heatmap"></div>
     </body>
@@ -69,7 +69,6 @@ export default {
       // Add some dimensions to our svg
       var svg = d3
         .select('#map')
-        .append('svg')
         .attr('width', width)
         .attr('height', height)
 
