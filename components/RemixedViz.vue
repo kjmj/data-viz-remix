@@ -204,6 +204,9 @@ export default {
           .domain(years)
           .padding(0.01)
 
+        // top axis label
+        svg.append('g').call(d3.axisTop(x))
+
         svg
           .append('g')
           .attr('transform', 'translate(0,' + height + ')')
@@ -216,6 +219,7 @@ export default {
           .domain(countries)
           .padding(0.01)
 
+        // left axis label
         svg.append('g').call(d3.axisLeft(y))
 
         // Build color scale
