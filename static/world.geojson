@@ -1735,7 +1735,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "The Bahamas" },
+      "properties": { "name": "Bahamas" },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -5159,7 +5159,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "England" },
+      "properties": { "name": "United Kingdom" },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -5416,7 +5416,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Guinea Bissau" },
+      "properties": { "name": "Guinea-Bissau" },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -11134,7 +11134,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Republic of Serbia" },
+      "properties": { "name": "Serbia" },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -11907,7 +11907,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "United Republic of Tanzania" },
+      "properties": { "name": "Tanzania" },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -12150,7 +12150,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "USA" },
+      "properties": { "name": "United States" },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
