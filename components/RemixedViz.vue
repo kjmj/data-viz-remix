@@ -4,8 +4,6 @@
     <h2 class="subtitle">
       The remixed viz will go here
     </h2>
-    <p>Country: {{ country }}</p>
-    <p># of times mentioned in the NY Times: {{ numTimes }}</p>
     <b-field label="Select a year">
       <b-select placeholder="Select a year" v-model="selectedYear">
         <option v-for="option in years" :value="option" :key="option">
@@ -27,8 +25,6 @@ export default {
   name: 'RemixedViz',
   data() {
     return {
-      country: '',
-      numTimes: '',
       selectedYear: 2016,
       years: [
         2000,
@@ -50,19 +46,63 @@ export default {
         2016
       ],
       nyDataPromise: null,
-      topoDataPromise: null
+      topoDataPromise: null,
+      tooltip: d3
+        .select('body')
+        .append('div')
+        .style('position', 'absolute')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .style('background-color', 'white')
+        .style('border', 'solid')
+        .style('border-width', '2px')
+        .style('border-radius', '5px')
+        .style('padding', '5px')
     }
   },
+  mixins: [
+    {
+      methods: {
+        mouseover: function(d, vm) {
+          this.tooltip.style('visibility', 'visible')
+
+          d3.select(vm)
+            .style('stroke', 'black')
+            .style('opacity', 1)
+        },
+        mouseout: function(d, vm) {
+          this.tooltip.style('visibility', 'hidden')
+
+          d3.select(vm)
+            .style('stroke', 'none')
+            .style('opacity', 0.8)
+        },
+        mousemove: function(d, country, numOccurrences, year) {
+          this.tooltip
+            .html(
+              'Country: ' +
+                country +
+                '<br>' +
+                'Year: ' +
+              numOccurrences +
+                '<br>' +
+                'Number of occurences: ' +
+                year
+            )
+            .style('top', event.pageY - 10 + 'px')
+            .style('left', event.pageX + 10 + 'px')
+        }
+      }
+    }
+  ],
   watch: {
     selectedYear: function(newYear, oldYear) {
       this.drawMap()
     }
   },
   created() {
-    let vm = this
-
     // load in ny dataset
-    vm.nyDataPromise = new Promise(function(resolve, reject) {
+    this.nyDataPromise = new Promise(function(resolve, reject) {
       d3.csv('ny_times_data.csv')
         .then(function(data) {
           resolve(data)
@@ -73,7 +113,7 @@ export default {
     })
 
     // load in topo dataset
-    vm.topoDataPromise = new Promise(function(resolve, reject) {
+    this.topoDataPromise = new Promise(function(resolve, reject) {
       d3.json('world.geojson')
         .then(function(data) {
           resolve(data)
@@ -89,9 +129,10 @@ export default {
   },
   methods: {
     drawMap: function() {
+      let vm = this
+
       var width = 940
       var height = 600
-      let vm = this
 
       // Add some dimensions to our svg
       var svg = d3
@@ -124,12 +165,6 @@ export default {
         }
       }
 
-      // Called when the mouse hovers over a country
-      let mouseOver = function(d) {
-        vm.country = d.properties.name
-        vm.numTimes = d.total
-      }
-
       // Once data is loaded, draw the map
       function ready(topo) {
         svg
@@ -142,10 +177,18 @@ export default {
           .attr('d', d3.geoPath().projection(projection))
           // set the color of each country
           .attr('fill', function(d) {
-            d.total = data.get(d.properties.name) || 0
+            d.total = data.get(d.properties.name) || 'No data'
             return colorScale(d.total)
           })
-          .on('mouseover', mouseOver)
+          .on('mouseover', function(d) {
+            vm.mouseover(d, this)
+          })
+          .on('mousemove', function(d) {
+            vm.mousemove(d, d.properties.name, vm.selectedYear, d.total)
+          })
+          .on('mouseout', function(d) {
+            vm.mouseout(d, this)
+          })
       }
     },
     drawHeatMap: function() {
@@ -164,48 +207,6 @@ export default {
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-
-      var tooltip = d3
-        .select('body')
-        .append('div')
-        .style('position', 'absolute')
-        .style('z-index', '10')
-        .style('visibility', 'hidden')
-        .style('background-color', 'white')
-        .style('border', 'solid')
-        .style('border-width', '2px')
-        .style('border-radius', '5px')
-        .style('padding', '5px')
-
-      // Three function that change the tooltip when user hover / move / leave a cell
-      var mouseover = function(d) {
-        tooltip.style('visibility', 'visible')
-
-        d3.select(this)
-          .style('stroke', 'black')
-          .style('opacity', 1)
-      }
-      var mousemove = function(d) {
-        tooltip
-          .html(
-            'Country: ' +
-              d.country +
-              '<br>' +
-              'Year: ' +
-              d.year +
-              '<br>' +
-              'Number of occurences: ' +
-              d.numOccurrences
-          )
-          .style('top', event.pageY - 10 + 'px')
-          .style('left', event.pageX + 10 + 'px')
-      }
-      var mouseout = function(d) {
-        tooltip.style('visibility', 'hidden')
-        d3.select(this)
-          .style('stroke', 'none')
-          .style('opacity', 0.8)
-      }
 
       //Read the data
       vm.nyDataPromise.then(function(data) {
@@ -273,9 +274,15 @@ export default {
           .style('fill', function(d) {
             return colorScale(d.numOccurrences)
           })
-          .on('mouseover', mouseover)
-          .on('mousemove', mousemove)
-          .on('mouseout', mouseout)
+          .on('mouseover', function(d) {
+            vm.mouseover(d, this)
+          })
+          .on('mousemove', function(d) {
+            vm.mousemove(d, d.country, d.numOccurrences, d.year)
+          })
+          .on('mouseout', function(d) {
+            vm.mouseout(d, this)
+          })
       })
     }
   },
