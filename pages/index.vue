@@ -4,7 +4,7 @@
       <div class="container">
         <Description></Description>
       </div>
-    </section >
+    </section>
     <section class="section" id="oldViz">
       <div class="container">
         <OldViz></OldViz>

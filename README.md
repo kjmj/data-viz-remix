@@ -2,7 +2,7 @@
 
 > Remixing a data visualization
 
-> Find it [here](TODO)
+> Find the live website [here](TODO)
 
 ## Build Setup
 
@@ -52,6 +52,6 @@ Here is the heatmap I created. You can explore the data by hovering over a cell 
 2. I was able to build this website using vue.js. I tried to take advantage components, sharing data and functions, and its reactivity.
 
 ### Design Achievements
+
 1. I used a color scale that was visually appealing and matched the purple theme of the website.
 2. Clicking on an item in the navbar will automatically scroll you to that section. This is a nice touch to the website.
-
