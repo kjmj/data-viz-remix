@@ -1,9 +1,14 @@
 <template>
   <div>
     <h1 class="title">Remixed Viz</h1>
-    <h2 class="subtitle">
-      The remixed viz will go here
-    </h2>
+    <p>
+      Here are two visualizations I made using d3js. I created a cloroplath map
+      and heatmap. You can change the year for the map and it will update. The
+      heatmap is good for determining years where a certain country was
+      mentioned more than normal.
+    </p>
+    <br />
+    <h2 class="subtitle">Cloroplath Map</h2>
     <b-field label="Select a year">
       <b-select placeholder="Select a year" v-model="selectedYear">
         <option v-for="option in years" :value="option" :key="option">
@@ -12,6 +17,7 @@
       </b-select>
     </b-field>
     <svg id="map"></svg>
+    <h2 class="subtitle">Heatmap</h2>
     <body>
       <div id="heatmap"></div>
     </body>
@@ -84,7 +90,7 @@ export default {
                 country +
                 '<br>' +
                 'Year: ' +
-              numOccurrences +
+                numOccurrences +
                 '<br>' +
                 '# of times mentioned in NYTimes: ' +
                 year
@@ -177,8 +183,8 @@ export default {
           .attr('d', d3.geoPath().projection(projection))
           // set the color of each country
           .attr('fill', function(d) {
-            d.total = data.get(d.properties.name) || 'No data'
-            return colorScale(d.total)
+            d.total = data.get(d.properties.name) || null
+            return d.total == null ? 'white' : colorScale(d.total)
           })
           .on('mouseover', function(d) {
             vm.mouseover(d, this)
@@ -272,7 +278,9 @@ export default {
           .attr('width', x.bandwidth())
           .attr('height', y.bandwidth())
           .style('fill', function(d) {
-            return d.numOccurrences == 'null' ? 'white' : colorScale(d.numOccurrences)
+            return d.numOccurrences == 'null'
+              ? 'white'
+              : colorScale(d.numOccurrences)
           })
           .on('mouseover', function(d) {
             vm.mouseover(d, this)
