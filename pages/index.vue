@@ -5,8 +5,7 @@
         <Description></Description>
       </div>
     </section>
-
-    <section class="section" id="oldViz">
+    <section id="oldViz">
       <div class="container">
         <OldViz></OldViz>
       </div>
