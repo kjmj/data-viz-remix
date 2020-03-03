@@ -1,3 +1,15 @@
+// only add `router.base = '/<repository-name>/'` if `DEPLOY_ENV` is `GH_PAGES`
+const routerBase =
+  process.env.DEPLOY_ENV === 'GH_PAGES'
+    ? {
+        router: {
+          base: '/04-Remix/'
+        }
+      }
+    : {
+        router: {}
+      }
+
 export default {
   mode: 'universal',
   /*
@@ -16,6 +28,10 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
+  /*
+   ** Since the site is deployed on GitHub pages, we need to give a router base
+   */
+  router: routerBase.router,
   /*
    ** Customize the progress-bar color
    */
