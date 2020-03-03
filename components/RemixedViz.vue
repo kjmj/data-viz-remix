@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h1 class="title">Remixed Viz</h1>
-    <p>
+    <h2 class="title  is-2">Remixed Viz</h2>
+    <p class="subtitle">
       Here are two visualizations I made using d3js. I created a cloroplath map
       and heatmap. You can change the year for the map and it will update. The
       heatmap is good for determining years where a certain country was
       mentioned more than normal.
     </p>
     <br />
-    <h2 class="subtitle">Cloroplath Map</h2>
+    <h3 class="title  is-3">Cloroplath Map</h3>
     <b-field label="Select a year">
       <b-select placeholder="Select a year" v-model="selectedYear">
         <option v-for="option in years" :value="option" :key="option">
@@ -17,7 +17,7 @@
       </b-select>
     </b-field>
     <svg id="map"></svg>
-    <h2 class="subtitle">Heatmap</h2>
+    <h3 class="title is-3">Heatmap</h3>
     <body>
       <div id="heatmap"></div>
     </body>

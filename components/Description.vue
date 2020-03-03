@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1 class="title">Description</h1>
-    <h2 class="subtitle">
+    <h1 class="title  is-2">Description</h1>
+    <p class="subtitle">
       The description of this project will go here
-    </h2>
+    </p>
   </div>
 </template>
 
