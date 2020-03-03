@@ -42,13 +42,13 @@ Here is the original viz. It shows the number of times a country was mentioned i
 
 ![Map](static/oldViz.png)
 
-#### Choropleth Map
+#### Choropleth Map - My Remix #1
 
 Here is the choropleth map I created. You can select a year, and the countries will be colored darker if they have been mentioned in the NY Times more, and lighter if there were less mentions.
 
 ![Map](assets/map.png)
 
-#### Heatmap
+#### Heatmap - My Remix #2
 
 Here is the heatmap I created. You can explore the data by hovering over a cell and getting the year/country/count of times mentioned in the NY Times. The heatmap is useful for determining outliers in our data.
 
