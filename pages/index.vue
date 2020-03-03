@@ -10,13 +10,13 @@
         <OldViz></OldViz>
       </div>
     </section>
-    <no-ssr>
+    <client-only>
       <section class="section" id="remixedViz">
         <div class="container">
           <RemixedViz></RemixedViz>
         </div>
       </section>
-    </no-ssr>
+    </client-only>
   </div>
 </template>
 
