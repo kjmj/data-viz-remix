@@ -86,7 +86,7 @@ export default {
                 'Year: ' +
               numOccurrences +
                 '<br>' +
-                'Number of occurences: ' +
+                '# of times mentioned in NYTimes: ' +
                 year
             )
             .style('top', event.pageY - 10 + 'px')
@@ -103,7 +103,7 @@ export default {
   created() {
     // load in ny dataset
     this.nyDataPromise = new Promise(function(resolve, reject) {
-      d3.csv('ny_times_data.csv')
+      d3.csv('ny_times_data_no_missing.csv')
         .then(function(data) {
           resolve(data)
         })
@@ -272,13 +272,13 @@ export default {
           .attr('width', x.bandwidth())
           .attr('height', y.bandwidth())
           .style('fill', function(d) {
-            return colorScale(d.numOccurrences)
+            return d.numOccurrences == 'null' ? 'white' : colorScale(d.numOccurrences)
           })
           .on('mouseover', function(d) {
             vm.mouseover(d, this)
           })
           .on('mousemove', function(d) {
-            vm.mousemove(d, d.country, d.numOccurrences, d.year)
+            vm.mousemove(d, d.country, d.year, d.numOccurrences)
           })
           .on('mouseout', function(d) {
             vm.mouseout(d, this)
