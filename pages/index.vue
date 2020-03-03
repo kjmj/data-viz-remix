@@ -4,8 +4,8 @@
       <div class="container">
         <Description></Description>
       </div>
-    </section>
-    <section id="oldViz">
+    </section >
+    <section class="section" id="oldViz">
       <div class="container">
         <OldViz></OldViz>
       </div>
