@@ -20,5 +20,29 @@
     <div>
       <nuxt />
     </div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Remixing a data visualization</strong> by
+          <a href="https://github.com/kjmj/" target="_blank">Ken Morton</a> for
+          Lane Harrison's Data Visualization course at
+          <a href="https://www.wpi.edu/" target="_blank">WPI</a>. Find the
+          source code on
+          <a href="https://github.com/kjmj/data-viz-remix/" target="_blank"
+            >GitHub</a
+          >.
+        </p>
+        <p>
+          Made with <a href="https://vuejs.org/" target="_blank">vue.js</a> and
+          <a href="https://d3js.org/" target="_blank">d3.js</a>. Here is the
+          <a
+            href="https://data.world/ansakoy/countries-in-new-york-times-2000-2016/"
+            target="_blank"
+            >dataset</a
+          >.
+        </p>
+      </div>
+    </footer>
   </div>
 </template>
